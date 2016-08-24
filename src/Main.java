@@ -3,7 +3,6 @@ import spark.ModelAndView;
 import spark.Session;
 import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
-
 import java.io.*;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -19,18 +18,8 @@ public class Main {
     static ArrayList<Person> personArrayList = new ArrayList<>();
 
     public static void main(String[] args) throws FileNotFoundException {
-        File f = new File("people.csv");
-        Scanner scanner = new Scanner(f);
-        scanner.nextLine();
 
-        while (scanner.hasNext()) {
-            String line = scanner.nextLine();
-            String[] columns = line.split(",");
-            Person person = new Person(Integer.valueOf(columns[0]), columns[1], columns[2], columns[3], columns[4], columns[5]);
-            personArrayList.add(person);
-
-
-
+        readFile();
         Spark.init();
 
         Spark.get(
@@ -70,7 +59,6 @@ public class Main {
                         HashMap m = new HashMap();
                         Integer id = Integer.valueOf(request.queryParams("id"));
                         Person personID = personArrayList.get(id - 1);
-
                         m.put("person", personID);
                         return new ModelAndView(m, "person.html");
                     },
@@ -99,11 +87,23 @@ public class Main {
                         return "";
                     }
             );
-
-
-
     }
+
+
+
+    private static void readFile() throws FileNotFoundException {
+        File f = new File("people.csv");
+        Scanner scanner = new Scanner(f);
+        scanner.nextLine();
+
+        while (scanner.hasNext()) {
+            String line = scanner.nextLine();
+            String[] columns = line.split(",");
+            Person person = new Person(Integer.valueOf(columns[0]), columns[1], columns[2], columns[3], columns[4], columns[5]);
+            personArrayList.add(person);
+
+
 
         }
-    }
+}}
 
